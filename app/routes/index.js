@@ -32,7 +32,12 @@ router.post('/uploadTestFile', function(req,res){
 
 			switch(extension){
 				case 'pdf':
-
+					convertToSvg({Name: Name, randomString: randomString}, function(x,y){
+						if(x)
+							res.send(x);
+						else
+							res.send('/' + randomString + '.svg');
+					});
 					break;
 				default:
 					convertToPdf({Name: Name, randomString: randomString}, function(a,b){
@@ -54,11 +59,33 @@ router.post('/uploadTestFile', function(req,res){
 
 });
 
+
+var convertToSvg = function(data,cb){
+	pdfUtils('./public/' + data.randomString + '.pdf', function(err,doc){
+
+		if(err){
+			cb(null,false);
+			return;
+		}
+		else{
+			for(var x=0; x < doc.length; x++){
+				doc[x].asSVG().toFile('./public/'+data.randomString + '.svg');
+			}
+			cb(null,true);
+			return;
+		}
+
+	});
+}
+
 var convertToPdf = function(data,cb){
 
 	fs.readFile('./tempFiles/' + data.Name, function(a,b){
 
-	if(a) throw a;
+	if(a) {
+		cb(null,false);
+		return;
+	}
 	var img = new Canvas.Image;
 	img.src = b;
 
@@ -67,7 +94,11 @@ var convertToPdf = function(data,cb){
 	ctx.drawImage(img,0,0,img.width, img.height);
 	fs.writeFile('./public/'+data.randomString+'.pdf', canvas.toBuffer());
 	// 
-	cb(null,true);
+	
+	convertToSvg(data, function(p,q){
+		if(p) return cb(null,false);
+		else return cb(null,q);
+	})
 
 	});
 
