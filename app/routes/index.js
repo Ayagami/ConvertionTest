@@ -69,7 +69,7 @@ var convertToSvg = function(data,cb){
 		}
 		else{
 			for(var x=0; x < doc.length; x++){
-				doc[x].asSVG().toFile('./public/'+data.randomString + '.svg');
+				doc[x].asSVG().toFile('./public/'+data.randomString + '_' + (x+1) + '.svg');
 			}
 			cb(null,true);
 			return;
