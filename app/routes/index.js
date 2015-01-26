@@ -35,21 +35,13 @@ router.post('/uploadTestFile', function(req,res){
 
 					break;
 				default:
-						fs.readFile('./tempFiles/' + Name, function(a,b){
-
-							if(a) throw a;
-							var img = new Canvas.Image;
-							img.src = b;
-
-							var canvas = new Canvas(img.width, img.height, 'pdf');
-							var ctx    = canvas.getContext('2d');
-							ctx.drawImage(img,0,0,img.width, img.height);
-							fs.writeFile('./public/'+randomString+'.pdf', canvas.toBuffer());
-							// 
+					convertToPdf({Name: Name, randomString: randomString}, function(a,b){
+						if(a)
+							res.send(a);
+						else{
 							res.send('/' + randomString + '.pdf');
-
-						});
-
+						}
+					})
 					break;
 			}
 
@@ -61,5 +53,25 @@ router.post('/uploadTestFile', function(req,res){
 	});
 
 });
+
+var convertToPdf = function(data,cb){
+
+	fs.readFile('./tempFiles/' + data.Name, function(a,b){
+
+	if(a) throw a;
+	var img = new Canvas.Image;
+	img.src = b;
+
+	var canvas = new Canvas(img.width, img.height, 'pdf');
+	var ctx    = canvas.getContext('2d');
+	ctx.drawImage(img,0,0,img.width, img.height);
+	fs.writeFile('./public/'+data.randomString+'.pdf', canvas.toBuffer());
+	// 
+	cb(null,true);
+
+	});
+
+}
+
 
 module.exports = router;
