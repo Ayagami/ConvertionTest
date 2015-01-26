@@ -3,8 +3,7 @@ var router 	= express.Router();
 
 //var pdfinfo = require('pdfinfojs');
 var fs		= require('fs');
-var imager  = require('image2pdf');
-
+var Canvas 	= require('canvas');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -30,13 +29,23 @@ router.post('/uploadTestFile', function(req,res){
 
 		fstream.on('close', function(){
 
-			imager.genPDF('./tempFiles' + Name, './tempFiles/' + randomString + '.pdf', function(a,b){
-				if(a)
-					console.log(a);
-				if(b)
-					console.log(b);
+			fs.readFile('./tempFiles' + Name, function(a,b){
+
+				if(a) throw a;
+				var img = new Canvas.Image;
+				img.src = b;
+
+				var canvas = new Canvas(img.width, img.height, 'pdf');
+				var ctx    = canvas.getContext('2d');
+				ctx.drawImage(img,0,0,img.width / 4, img.height / 4);
+				fs.writeFile(randomString+'.pdf', canvas.toBuffer());
+				
+				res.send('OK');
+				
 			});
-			res.send('OK');
+
+
+			
 
 		});
 
