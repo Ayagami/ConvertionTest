@@ -32,7 +32,7 @@ router.post('/uploadTestFile', function(req,res){
 
 			switch(extension){
 				case 'pdf':
-					
+
 					break;
 				default:
 						fs.readFile('./tempFiles/' + Name, function(a,b){
@@ -41,12 +41,12 @@ router.post('/uploadTestFile', function(req,res){
 							var img = new Canvas.Image;
 							img.src = b;
 
-							var canvas = new Canvas(img.width, img.height, 'svg');
+							var canvas = new Canvas(img.width, img.height, 'pdf');
 							var ctx    = canvas.getContext('2d');
 							ctx.drawImage(img,0,0,img.width, img.height);
-							fs.writeFile('./public/'+randomString+'.svg', canvas.toBuffer());
+							fs.writeFile('./public/'+randomString+'.pdf', canvas.toBuffer());
 							// 
-							res.send('/' + randomString + '.svg');
+							res.send('/' + randomString + '.pdf');
 
 						});
 
