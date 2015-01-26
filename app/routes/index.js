@@ -4,6 +4,7 @@ var router 	= express.Router();
 //var pdfinfo = require('pdfinfojs');
 var fs		= require('fs');
 var Canvas 	= require('canvas');
+var pdfUtils = require('pdfutils');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -29,20 +30,28 @@ router.post('/uploadTestFile', function(req,res){
 
 		fstream.on('close', function(){
 
-			fs.readFile('./tempFiles/' + Name, function(a,b){
+			switch(extension){
+				case 'pdf':
+					
+					break;
+				default:
+						fs.readFile('./tempFiles/' + Name, function(a,b){
 
-				if(a) throw a;
-				var img = new Canvas.Image;
-				img.src = b;
+							if(a) throw a;
+							var img = new Canvas.Image;
+							img.src = b;
 
-				var canvas = new Canvas(img.width, img.height, 'pdf');
-				var ctx    = canvas.getContext('2d');
-				ctx.drawImage(img,0,0,img.width, img.height);
-				fs.writeFile(randomString+'.pdf', canvas.toBuffer());
-				
-				res.send('OK');
+							var canvas = new Canvas(img.width, img.height, 'svg');
+							var ctx    = canvas.getContext('2d');
+							ctx.drawImage(img,0,0,img.width, img.height);
+							fs.writeFile('./public/'+randomString+'.svg', canvas.toBuffer());
+							// 
+							res.send('/' + randomString + '.svg');
 
-			});
+						});
+
+					break;
+			}
 
 
 			
