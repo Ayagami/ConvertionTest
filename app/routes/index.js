@@ -37,7 +37,7 @@ router.post('/uploadTestFile', function(req,res){
 
 				var canvas = new Canvas(img.width, img.height, 'pdf');
 				var ctx    = canvas.getContext('2d');
-				ctx.drawImage(img,0,0,img.width / 4, img.height / 4);
+				ctx.drawImage(img,0,0,img.width, img.height);
 				fs.writeFile(randomString+'.pdf', canvas.toBuffer());
 				
 				res.send('OK');
