@@ -29,7 +29,7 @@ router.post('/uploadTestFile', function(req,res){
 
 		fstream.on('close', function(){
 
-			fs.readFile('./tempFiles' + Name, function(a,b){
+			fs.readFile('./tempFiles/' + Name, function(a,b){
 
 				if(a) throw a;
 				var img = new Canvas.Image;
@@ -41,7 +41,7 @@ router.post('/uploadTestFile', function(req,res){
 				fs.writeFile(randomString+'.pdf', canvas.toBuffer());
 				
 				res.send('OK');
-				
+
 			});
 
 
