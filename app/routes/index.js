@@ -3,8 +3,9 @@ var router 	= express.Router();
 
 //var pdfinfo = require('pdfinfojs');
 var fs		= require('fs');
-var Canvas 	= require('canvas');
-var pdfUtils = require('pdfutils').pdfutils;
+var http = require('http');
+//var Canvas 	= require('canvas');
+//var pdfUtils = require('pdfutils').pdfutils;
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -15,6 +16,29 @@ router.get('/uploadTestFile', function(req,res){
 	res.render('upload', {title: 'Uploading a Test File'});
 });
 
+router.get('/apiTest', function(req,res){
+
+	//var apiURL = 'http://online.verypdf.com/api/?apikey=XXXXXXXXXXXXX&app=pdftools&infile=https://dl.dropboxusercontent.com/u/5570462/verypdf-cloud-api/verypdf.pdf&outfile=out.jpg&-width=100&-height=100';
+	var apiURL = 'http://online.verypdf.com/api/?apikey=XXXXXXXXXXXXX&app=pdftools&infile=https://dl.dropboxusercontent.com/u/5570462/verypdf-cloud-api/verypdf.pdf&outfile=out.jpg';
+	http.get(apiURL, function(response){
+
+		var body = '';
+
+		response.on('data', function(c){
+			body += c;
+		});
+
+		response.on('end', function(){
+			console.log(body);
+			var arr = body.split(" ");
+
+			var s = arr[1].substring(0, arr[1].length - 4);
+			res.render('api', {title: 'api', imgurl: s});
+		})
+
+	});
+
+});
 router.post('/uploadTestFile', function(req,res){
 	var fstream;
 	req.pipe(req.busboy);
@@ -49,10 +73,6 @@ router.post('/uploadTestFile', function(req,res){
 					})
 					break;
 			}
-
-
-			
-
 		});
 
 	});
