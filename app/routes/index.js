@@ -4,8 +4,8 @@ var router 	= express.Router();
 //var pdfinfo = require('pdfinfojs');
 var fs		= require('fs');
 var http = require('http');
-//var Canvas 	= require('canvas');
-//var pdfUtils = require('pdfutils').pdfutils;
+var Canvas 	= require('canvas');
+var pdfUtils = require('pdfutils').pdfutils;
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
