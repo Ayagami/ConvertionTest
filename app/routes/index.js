@@ -4,8 +4,9 @@ var router 	= express.Router();
 //var pdfinfo = require('pdfinfojs');
 var fs		= require('fs');
 var http = require('http');
-var Canvas 	= require('canvas');
-var pdfUtils = require('pdfutils').pdfutils;
+//var Canvas 	= require('canvas');
+//var pdfUtils = require('pdfutils').pdfutils;
+var unoconv = require('unoconv');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -98,7 +99,7 @@ var convertToSvg = function(data,cb){
 	});
 }
 
-var convertToPdf = function(data,cb){
+/*var convertToPdf = function(data,cb){
 
 	fs.readFile('./tempFiles/' + data.Name, function(a,b){
 
@@ -122,6 +123,26 @@ var convertToPdf = function(data,cb){
 
 	});
 
+}*/
+
+var convertToPdf = function(data,cb){
+
+	var obj = { bin: "C:/Program Files (x86)/unoconv"};
+
+	unoconv.convert('a.png', 'pdf' , function(error,result){
+		if(error){
+			console.log(error);
+			return cb(null,false);
+		}
+		else{
+			fs.writeFile('./public/'+data.randomString+'.pdf', result);
+			/*convertToSvg(data,function(p,q){
+				if(p) return cb(null,false);
+				else return cb(null,q);
+			})*/
+			return cb(null,true);
+		}
+	});
 }
 
 
